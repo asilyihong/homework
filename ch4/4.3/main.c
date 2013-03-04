@@ -15,8 +15,7 @@ int main(int argc, char **argv)
     double op2;
     char s[MAXOP];
 
-    while ((type = getop(s) != EOF)) {
-	printf("switch type:%d\n", type);
+    while ((type = getop(s)) != EOF) {
 	switch(type) {
 	case NUMBER:
 	    push(atof(s));
@@ -42,7 +41,6 @@ int main(int argc, char **argv)
 	    printf("\t%.8g\n", pop());
 	    break;
 	default:
-	    printf("Error: unknow command ((%c))\n", type);
 	    printf("Error: unknow command ((%s))\n", s);
 	    break;
 	}
@@ -88,30 +86,23 @@ int getop(char s[])
     while ((s[0] = c = getch()) == ' ' || c == '\t')
 	;
     s[1] = '\0';
-    printf("getop char1 %d\n", c);
     if (!isdigit(c) && c != '.') {
-	printf("getop not number %d\n", c);
 	return c;	/* not a number */
     }
     i = 0;
     if (isdigit(c))	/* collect integer part */
     {
-	printf("get char11: %c\n", (char)c);
-	while (isdigit(s[++i] = c = getch()) ) {
-	    printf("get char12: %c\n", (char)c);
-	}
+	while (isdigit(s[++i] = c = getch()))
+	    ;
     }
     if (c == '.')	/* collect fraction part */
     {
-	printf("get char21: %c\n", (char)c);
-	while (isdigit(s[++i] = c = getch())) {
-	    printf("get char22: %c\n", (char)c);
-	}
+	while (isdigit(s[++i] = c = getch()))
+	    ;
     }
     s[i] = '\0';
     if (c != EOF)
 	ungetch(c);
-    printf("getop char2 ((%c))((%c))\n", (char)c, (char)NUMBER);
     return NUMBER;
 }
 
@@ -123,7 +114,6 @@ int  bufp = 0;	    /* next free postition in buf */
 
 int getch(void)	/* get a (possibly pushed back) character */
 {
-    printf("getch: %d\n", bufp);
     return (bufp > 0)? buf[--bufp] : getchar();
 }
 
