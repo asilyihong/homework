@@ -1,8 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>	/* for atof() */
 
-#define MAXOP	100	/* max size of operand or operator */
-#define NUMBER	'0'
+#define MAXOP   100	/* max size of operand or operator */
+#define NUMBER  '0'
 
 int getop(char []);
 void push(double);
@@ -16,6 +16,7 @@ int main(int argc, char **argv)
     char s[MAXOP];
 
     while ((type = getop(s) != EOF)) {
+	printf("switch type:%d\n", type);
 	switch(type) {
 	case NUMBER:
 	    push(atof(s));
@@ -37,10 +38,11 @@ int main(int argc, char **argv)
 	    else
 		printf("Error: zero divisor\n");
 	    break;
-	case '\r':
+	case '\n':
 	    printf("\t%.8g\n", pop());
 	    break;
 	default:
+	    printf("Error: unknow command ((%c))\n", type);
 	    printf("Error: unknow command ((%s))\n", s);
 	    break;
 	}
@@ -48,7 +50,7 @@ int main(int argc, char **argv)
     return 0;
 }
 
-#define MAXVAL	100	/* maximum depth of val stack */
+#define MAXVAL  100	/* maximum depth of val stack */
 
 int sp = 0;		/* next free stack position */
 double val[MAXVAL];	/* value stack */
@@ -86,29 +88,42 @@ int getop(char s[])
     while ((s[0] = c = getch()) == ' ' || c == '\t')
 	;
     s[1] = '\0';
-    if (isdigit(c) && c != '.')
+    printf("getop char1 %d\n", c);
+    if (!isdigit(c) && c != '.') {
+	printf("getop not number %d\n", c);
 	return c;	/* not a number */
+    }
     i = 0;
     if (isdigit(c))	/* collect integer part */
-	while (isdigit(s[++i] = c = getch()) )
-	    ;
+    {
+	printf("get char11: %c\n", (char)c);
+	while (isdigit(s[++i] = c = getch()) ) {
+	    printf("get char12: %c\n", (char)c);
+	}
+    }
     if (c == '.')	/* collect fraction part */
-	while (isdigit(s[++i] = c = getch()) )
-	    ;
+    {
+	printf("get char21: %c\n", (char)c);
+	while (isdigit(s[++i] = c = getch())) {
+	    printf("get char22: %c\n", (char)c);
+	}
+    }
     s[i] = '\0';
     if (c != EOF)
 	ungetch(c);
+    printf("getop char2 ((%c))((%c))\n", (char)c, (char)NUMBER);
     return NUMBER;
 }
 
 
-#define BUFSIZE	100
+#define BUFSIZE 100
 
 char buf[BUFSIZE];  /* buffer for ungetch */
 int  bufp = 0;	    /* next free postition in buf */
 
 int getch(void)	/* get a (possibly pushed back) character */
 {
+    printf("getch: %d\n", bufp);
     return (bufp > 0)? buf[--bufp] : getchar();
 }
 
