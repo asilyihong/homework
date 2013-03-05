@@ -7,6 +7,10 @@
 int getop(char []);
 void push(double);
 double pop(void);
+double get_last(void);
+void duplicate_top(void);
+void swap_top_two(void);
+void clear_stack(void);
 
 /* reverse Polish calculator */
 int main(int argc, char **argv)
@@ -44,6 +48,18 @@ int main(int argc, char **argv)
 	    else
 		printf("Error: zero divisor\n");
 	    break;
+	case 't':   /* ex 4.4: add command to print the top element */
+	    printf("print top element: \t%.8g\n", get_last());
+	    break;
+	case 'd':   /* ex 4.4: add command to duplicate the top element */
+	    duplicate_top();
+	    break;
+	case 'w':   /* ex 4.4: add command to swap top two elements */
+	    swap_top_two();
+	    break;
+	case 'c':   /* ex 4.4: add command to clear stack */
+	    clear_stack();
+	    break;
 	case '\n':
 	    printf("\t%.8g\n", pop());
 	    break;
@@ -75,9 +91,55 @@ double pop(void)
     if (sp > 0)
 	return val[--sp];
     else {
-	printf("Error: stack empty\n");
+	printf("Error: stack empty in pop\n");
 	return 0.0;
     }
+}
+
+/* ex 4.4: add a command to print the top element */
+/* get_last: get the last element without popping it */
+double get_last(void)
+{
+    if (sp > 0)
+	return val[sp - 1];
+    else {
+	printf("Error: stack empty in get last\n");
+	return 0.0;
+    }
+}
+
+/* ex 4.4: add a command to duplicate the top element of the stack */
+/* duplicate_top: duplicate the top element of the stack */
+void duplicate_top(void)
+{
+    if (sp <= 0)
+	printf("Error: stack empty in duplicate top\n");
+    else if (sp < MAXVAL - 1) {
+	val[sp] = val[sp - 1];
+	sp++;
+    } else 
+	printf("Error: out of stack bound");
+}
+
+/* ex 4.4: add a command to swap the top two elements */
+/* swap_top_two: swap the top two elements */
+void swap_top_two(void)
+{
+    if (sp > 1) {
+	double tmp = val[sp -1];
+	val[sp - 1] = val[sp - 2];
+	val[sp - 2] = tmp;
+    } else {
+	printf("Error: stack has less than two element");
+    }
+}
+
+/* ex 4.4: add a command to clear stack */
+/* clear_stack: clear the stack */
+void clear_stack(void)
+{
+    sp = 0;
+    val[sp] = 0.0;
 }
 
 #include <ctype.h>
