@@ -37,6 +37,13 @@ int main(int argc, char **argv)
 	    else
 		printf("Error: zero divisor\n");
 	    break;
+	case '%':   /* ex 4.3: add modulus operator */
+	    op2 = pop();
+	    if (op2 != 0.0)
+		push((int)pop() % (int) op2);
+	    else
+		printf("Error: zero divisor\n");
+	    break;
 	case '\n':
 	    printf("\t%.8g\n", pop());
 	    break;
