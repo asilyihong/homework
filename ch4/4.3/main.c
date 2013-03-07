@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>	/* for atof() */
+#include <math.h>
 
 #define MAXOP   100	/* max size of operand or operator */
 #define NUMBER  '0'
@@ -16,7 +17,7 @@ void clear_stack(void);
 int main(int argc, char **argv)
 {
     int type;
-    double op2;
+    double op2 = 0.0;
     char s[MAXOP];
 
     while ((type = getop(s)) != EOF) {
@@ -33,6 +34,7 @@ int main(int argc, char **argv)
 	case '-':
 	    op2 = pop();
 	    push(pop() - op2);
+	    op2 = 0.0;
 	    break;
 	case '/':
 	    op2 = pop();
@@ -40,6 +42,7 @@ int main(int argc, char **argv)
 		push(pop() / op2);
 	    else
 		printf("Error: zero divisor\n");
+	    op2 = 0.0;
 	    break;
 	case '%':   /* ex 4.3: add modulus operator */
 	    op2 = pop();
@@ -47,6 +50,7 @@ int main(int argc, char **argv)
 		push((int)pop() % (int) op2);
 	    else
 		printf("Error: zero divisor\n");
+	    op2 = 0.0;
 	    break;
 	case 't':   /* ex 4.4: add command to print the top element */
 	    printf("print top element: \t%.8g\n", get_last());
@@ -59,6 +63,24 @@ int main(int argc, char **argv)
 	    break;
 	case 'c':   /* ex 4.4: add command to clear stack */
 	    clear_stack();
+	    break;
+	case 's':   /* ex 4.5: add sign command */
+	    push(sin(pop()));
+	    break;
+	case 'p':   /* ex 4.5: add pow command */
+	    op2 = pop();
+	    /* asil: need add a error handler here for pow? */
+	    {
+		double op3 = pop();
+		if (op3 > 0)
+		    push(pow(op3, op2));
+		else 
+		    push(pow(op3, (int)op2));
+	    }
+	    op2 = 0.0;
+	    break;
+	case 'e':   /* ex 4.5: add exp command */
+	    push(exp(pop()));
 	    break;
 	case '\n':
 	    printf("\t%.8g\n", pop());
